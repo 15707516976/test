@@ -1,0 +1,154 @@
+/*��ʼ����ʽ*/
+@charset "utf-8";
+*{margin:0;padding:0;-webkit-tap-highlight-color: rgba(0, 0, 0, 0);-webkit-box-sizing: border-box;-moz-box-sizing: border-box;}
+
+html {
+    height:100%;
+    min-height: 100%;
+    font-size: 100%;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+
+}
+body {
+    width: 100%;
+    min-height: 100%;
+    font-family:"Microsoft YaHei","΢���ź�","MicrosoftJhengHei","����ϸ��","Helvetica", "Arial", "sans-serif";
+    font-size: 14px;
+    position: relative;
+    word-break:break-all;
+}
+ul,li{
+    list-style: none;
+}
+img {
+    -ms-interpolation-mode: bicubic;
+    vertical-align: middle;
+}
+img:not([src*="/"]) {
+    display: none;
+}
+
+@media (max-width: 320px) {
+    html {
+        font-size: 22.2222222222222px;
+    }
+    .container {
+        width: 320px;
+        height: 100%;
+        margin: 0 auto;
+        background-color: #e7e7e7;
+        overflow: hidden;
+    }
+}
+@media (width: 360px) {
+    html {
+        font-size: 25px;
+    }
+}
+@media (width: 375px) {
+    html {
+        font-size: 26.0416666666667px;
+    }
+}
+@media (width: 384px) {
+    html {
+        font-size: 26.6666666666667px;
+    }
+}
+@media (width: 414px) {
+    html {
+        font-size: 28.75px;
+    }
+}
+@media (width: 400px) {
+    html {
+        font-size: 27.7777777777778px;
+    }
+}
+@media (width: 480px) {
+    html {
+        font-size: 33.3333333333333px;
+    }
+}
+@media (width: 540px) {
+    html {
+        font-size: 37.5px;
+    }
+}
+@media (min-width: 640px) {
+    html {
+        font-size: 44.4444444444444px;
+    }
+    .container {
+        width: 640px;
+        margin: 0 auto;
+        background-color: #e7e7e7;
+        height: 100%;
+        overflow: hidden;
+    }
+    .fcontent {
+        width: 640px;
+    }
+}
+body{
+    background-color:#efeff5;
+    height: 100%;
+    width: 100%;
+}
+.pay_state{
+    width: 100%;
+    background-color: #fff;
+    padding-top: 1.4rem;
+    padding-bottom: .8rem;
+}
+.pay_state img{
+    width: 2.6rem;
+    height: 2.6rem;
+}
+.pay_state p{
+    text-align: center;
+    font-size: .7rem;
+    line-height: 1.6rem;
+}
+.pay_state p:nth-child(4){
+   color: #999;
+    line-height: 1rem;
+}
+.pay_state .pay_2{
+    color: #4081e1;
+}
+.pay_state span{
+    font-size: 1.6rem;
+}
+.pay_state .pay_btn{
+    width: 5.8rem;
+    height: 2rem;
+    line-height: 2rem;
+    border: 1px solid #4081e1;
+    border-radius:.2rem;
+    color: #4081e1;
+    margin: auto;
+    margin-top: 1.2rem;
+    font-size: .8rem;
+}
+/*���*/
+.pay_ad{
+    width: 100% ;
+    position: absolute;
+    bottom: .6rem;
+}
+.pay_ad p{
+    color: #999;
+    text-align: center;
+    font-size: .8rem;
+    line-height: 2rem;
+}
+.pay_ad .pay_img{
+    width: 90%;
+    height: 8rem;
+    border: 1px solid #999;
+    border-radius: .4rem;
+    margin: auto;
+    background-color: #fff;
+}

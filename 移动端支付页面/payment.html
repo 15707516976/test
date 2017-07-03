@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="author" content="">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>向商户付款</title>
+    <link rel="stylesheet" href="payment.css"/>
+    <script src="common.js"></script>
+</head>
+<body>
+<div class="pay">
+    <div class="pay_logo">
+        <a href="javascript:;">
+            <img src="http://zixupay-file-one.b0.upaiyun.com/ljm/pay/pay_logo.jpg" alt=""/>
+        </a>
+        <p>向梓旭网备付金付款</p>
+    </div>
+    <div class="pay_import">
+        <p>消费总额</p>
+        <p>
+            <span>
+                <img src="http://zixupay-file-one.b0.upaiyun.com/ljm/pay/money.png" alt=""/>
+            </span>
+           <span class="input" id="total_feedyb"></span>
+        </p>
+    </div>
+    <p class="pay_mark">付款备注</p>
+    <div class="pay_keyboard">
+        <div class="all_num">
+            <ul>
+                <li class="num" onclick="fee_input_keyboard_text('1')">1</li>
+                <li class="num" onclick="fee_input_keyboard_text('2')">2</li>
+                <li class="num" onclick="fee_input_keyboard_text('3')">3</li>
+                <li class="delete num" onclick="fee_input_keyboard_text('del-')">
+                    <img src="http://zixupay-file-one.b0.upaiyun.com/ljm/pay/delete.png" alt=""/>
+                </li>
+            </ul>
+            <ul>
+                <li class="num" onclick="fee_input_keyboard_text('4')" >4</li>
+                <li class="num" onclick="fee_input_keyboard_text('5')">5</li>
+                <li class="num" onclick="fee_input_keyboard_text('6')">6</li>
+            </ul>
+            <ul>
+                <li class="num" onclick="fee_input_keyboard_text('7')">7</li>
+                <li class="num" onclick="fee_input_keyboard_text('8')">8</li>
+                <li class="num" onclick="fee_input_keyboard_text('9')">9</li>
+            </ul>
+        </div>
+        <ul class="other_num">
+            <li class="num_zore num" onclick="fee_input_keyboard_text('0')">0</li>
+            <li class="num" onclick="fee_input_keyboard_text('.')" >.</li>
+        </ul>
+        <div class="pay_btn">
+            <span>付款</span>
+        </div>
+    </div>
+</div>
+<script src="jquery.min.js"></script>
+<!-- 微信jsapi -->
+<script src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script>
+
+    //    改变键盘颜色
+//    window.onload = function() {
+//        var num = document.getElementsByClassName("num")
+//        for (var i = 0; i < num.length; i++) {
+//            num[i].addEventListener("touchstart", function(e) {
+//                this.style.backgroundColor = "#efeff5";
+//                var that = this;
+//                setTimeout(function() {
+//                    that.style.backgroundColor = "#fff";
+//                }, 300)
+//            });
+//        }
+    //    };
+    $(function(){
+        $(".num").on("touchstart", function () {
+            $(this).css("backgroundColor","#efeff5");
+            var that = $(this);
+            setTimeout(function () {
+                that.css("backgroundColor","#fff");
+            }, 200)
+        })
+    })
+  /* 判断是不是微信 */
+    function isWeiXin(){
+        var ua = window.navigator.userAgent.toLowerCase();
+        if(ua.match(/MicroMessenger/i) == 'micromessenger'){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    /* PHP方法获得GET */
+    var $_GET = (function(){
+        var url = window.document.location.href.toString();
+        var u = url.split("?");
+        if (typeof(u[1]) == "string") {
+            u = u[1].split("&");
+            var get = {};
+            for (var i in u) {
+                var j = u[i].split("=");
+                get[j[0]] = j[1]
+            }
+            return get
+        }else{
+            return {}
+        }
+    })();
+
+    if(isWeiXin()){
+        /* 判断URL是否存在openid,如果没有,取缓存,缓存没有,重新登录 */
+        if(!$_GET['openid']){
+            if(!$.cookie(appid+'user_openid')){
+                $('div.circle-box').css('display','');
+                $('#loding_msg').html('微信登录');
+                /* 没有唯一标示就滚去登录 */
+                var wx_login_url = 'https://comm.zixupay.com/wx/oauth_open/openid/?redirect_uri='+encodeURIComponent(document.URL)+'&appid='+appid;
+                setTimeout("window.location.href = wx_login_url",888);
+            }else{
+                var openid = $.cookie(appid+'user_openid')
+            }
+        }else{
+            var openid = $_GET['openid'];
+            $.cookie(appid+'user_openid', openid, { expires: 7, path: '/' });
+        }
+
+    }
+
+    function fee_input_keyboard_text(obj){
+        var old_obj = $('#total_feedyb').html();
+        /* 删除最后一位 */
+        if(obj == 'del-'){
+            $('#total_feedyb').html(old_obj.substr(0,old_obj.length-1));
+            return;
+            /* C清零 */
+        }else if(obj == 'del'){
+            $('#total_feedyb').html('');
+            return;
+            /* 如果输入的是. */
+        }else if(obj == '.'){
+            /* 不允许第一位就是. */
+            if(obj == '.' && old_obj == ''){
+                return;
+                /* 否则不检查 */
+            }else{
+                /* 只允许有一个小数点 */
+                if(old_obj.split('.').length-1>=1){
+                    return;
+                }
+                $('#total_feedyb').html(old_obj+''+obj);
+                return;
+            }
+        }
+        $('#total_feedyb').html(old_obj+''+obj);
+        check_fee_input();
+    }
+    function check_fee_input(){
+        var old_obj = $('#total_feedyb').html();
+        var reg = /(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/;
+        if(reg.test(old_obj)) {
+            if(old_obj >= 50000.01){
+                $('#total_feedyb').html(old_obj.substr(0,old_obj.length-1));
+            }
+        }else{
+            $('#total_feedyb').html(old_obj.substr(0,old_obj.length-1));
+        }
+    }
+
+    //    点击付款之后的加载页面
+    var btn = document.getElementsByClassName("pay_btn")
+    $(btn).click(function(){
+        console.log(111);
+        addLoading()
+    })
+
+//    加载中的显示页面
+    function addLoading(){
+        var loadingWrapper = document.createElement('div');
+        loadingWrapper.setAttribute('id','loadingWrapper');
+        loadingWrapper.style.width=window.screen.width+'px';
+        console.log(window.screen.width);
+        loadingWrapper.style.height=window.screen.height+'px';
+        loadingWrapper.style.position='fixed';
+        loadingWrapper.style.left= 0;
+        loadingWrapper.style.top= 0;
+        loadingWrapper.style.backgroundColor='rgba(0,0,0,0.1)';
+        var loadingGIF = document.createElement('img');
+        loadingGIF.src='images/loading.gif';
+        loadingGIF.setAttribute('class','loadingGIF');
+        loadingWrapper.appendChild(loadingGIF);
+        document.body.appendChild(loadingWrapper);
+        document.body.style.overflow='hidden';
+    }
+    function delLoading(){
+        var loadingWrapper = document.getElementById('loadingWrapper');
+        document.body.removeChild(loadingWrapper);
+    }
+</script>
+</body>
+</html>
